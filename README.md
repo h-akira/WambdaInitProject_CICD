@@ -8,9 +8,8 @@ WambdaInitProjectのCI/CDパイプライン（CodeBuild）をCloudFormationで�
 WambdaInitProject_CICD/
 ├── common/
 │   └── codebuild-infra.yaml          # Infrastructure (CDK) 用 CodeBuild
-├── csr001-backend/
-│   └── codebuild-backend.yaml        # CSR001 Backend (SAM) 用 CodeBuild
-├── csr001-frontend/
+├── csr001/
+│   ├── codebuild-backend.yaml        # CSR001 Backend (SAM) 用 CodeBuild
 │   └── codebuild-frontend.yaml       # CSR001 Frontend (S3) 用 CodeBuild
 ├── ssr001/
 │   └── codebuild-app.yaml            # SSR001 アプリ (SAM + S3) 用 CodeBuild
@@ -21,14 +20,13 @@ WambdaInitProject_CICD/
 
 **ディレクトリ構成の意図:**
 - `common/` - 全サブシステム共通のインフラCI/CD
-- `csr001-backend/` - CSR001 Backend専用のCI/CD（SAMデプロイ）
-- `csr001-frontend/` - CSR001 Frontend専用のCI/CD（S3 + CloudFront）
-- `ssr001/` - SSR001サブシステム専用のCI/CD
-- 将来サブシステムが増えた場合は、同様のディレクトリを追加（例: `csr002-backend/`, `csr002-frontend/`）
+- `csr001/` - CSR001サブシステムのCI/CD（Backend SAM + Frontend S3）
+- `ssr001/` - SSR001サブシステムのCI/CD（SAM + 静的ファイル）
+- 将来サブシステムが増えた場合は、同様のディレクトリを追加（例: `csr002/`）
 
-**CSR001の分離理由:**
+**CSR001の構成:**
 - Backend（SAM）とFrontend（Vue.js）を異なるリポジトリで管理
-- 独立したデプロイサイクルを実現
+- 独立したデプロイサイクルを実現するため、2つの CodeBuild プロジェクトを使用
 - FinanceProjectのパターンに準拠
 
 ## デプロイ方法
@@ -118,7 +116,7 @@ AWS_PROFILE=wambda aws cloudformation deploy \
 
 ```bash
 AWS_PROFILE=wambda aws cloudformation deploy \
-  --template-file WambdaInitProject_CICD/csr001-backend/codebuild-backend.yaml \
+  --template-file WambdaInitProject_CICD/csr001/codebuild-backend.yaml \
   --stack-name stack-wambda-cicd-csr001-backend \
   --parameter-overrides \
     CodeStarConnectionArn=arn:aws:codeconnections:ap-northeast-1:898133201705:connection/9490a8c2-ed2c-40a2-8067-ce698e531c9a \
@@ -130,7 +128,7 @@ AWS_PROFILE=wambda aws cloudformation deploy \
 
 ```bash
 AWS_PROFILE=wambda aws cloudformation deploy \
-  --template-file WambdaInitProject_CICD/csr001-frontend/codebuild-frontend.yaml \
+  --template-file WambdaInitProject_CICD/csr001/codebuild-frontend.yaml \
   --stack-name stack-wambda-cicd-csr001-frontend \
   --parameter-overrides \
     CodeStarConnectionArn=arn:aws:codeconnections:ap-northeast-1:898133201705:connection/9490a8c2-ed2c-40a2-8067-ce698e531c9a \

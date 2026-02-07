@@ -30,10 +30,10 @@ aws cloudformation deploy \
 
 # 2. CSR001: Backend CodeBuild
 echo ""
-echo "--- [2/5] csr001-backend/codebuild-backend ---"
+echo "--- [2/5] csr001/codebuild-backend ---"
 aws cloudformation deploy \
   --region "$REGION" \
-  --template-file "$SCRIPT_DIR/csr001-backend/codebuild-backend.yaml" \
+  --template-file "$SCRIPT_DIR/csr001/codebuild-backend.yaml" \
   --stack-name stack-wambda-cicd-csr001-backend \
   --capabilities CAPABILITY_NAMED_IAM \
   --parameter-overrides \
@@ -41,10 +41,10 @@ aws cloudformation deploy \
 
 # 3. CSR001: Frontend CodeBuild
 echo ""
-echo "--- [3/5] csr001-frontend/codebuild-frontend ---"
+echo "--- [3/5] csr001/codebuild-frontend ---"
 aws cloudformation deploy \
   --region "$REGION" \
-  --template-file "$SCRIPT_DIR/csr001-frontend/codebuild-frontend.yaml" \
+  --template-file "$SCRIPT_DIR/csr001/codebuild-frontend.yaml" \
   --stack-name stack-wambda-cicd-csr001-frontend \
   --capabilities CAPABILITY_NAMED_IAM \
   --parameter-overrides \
